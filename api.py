@@ -48,10 +48,13 @@ for name in films_map.keys():
 film_name = input('Name of the Film you want to know show times: ')
 search_functions =films_map[film_name][0]
 
-
 search_time_functions = f'https://www.cinecolombia.com/{city}/peliculas/{search_functions}'
 
-#ads
+"""
+since the show times and locations load with a js file, 
+it has to wait to the content to load so i had to use selenium 
+ """
+
 firefox_options= Options()
 firefox_options.add_argument("--headless")
 
@@ -75,4 +78,3 @@ try:
 
 finally:
     driver.quit()
-    print(locations)
