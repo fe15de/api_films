@@ -17,7 +17,7 @@ FILTER DATE SEARCH
 </div>
  """
 
-city = 'bogota'
+city = input('City to search films in Cine Colombia: ')
 URL = f"https://www.cinecolombia.com/{city}/cartelera"
 response = requests.get(URL)
 
@@ -43,6 +43,7 @@ for film in all_films:
 
 for name in films_map.keys():
     print(name)
+
 
 film_name = input('Name of the Film you want to know show times: ')
 search_functions =films_map[film_name][0]
@@ -74,3 +75,4 @@ try:
 
 finally:
     driver.quit()
+    print(locations)
