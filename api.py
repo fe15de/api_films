@@ -9,12 +9,12 @@ from selenium.webdriver.firefox.options import Options
 
 import re
 
-""" 
-FILTER DATE SEARCH
-<div class="column is-12">
-<date-filter :is-loading="isLoading" @change="dateChanged" first-function-date="2025-09-10"></date-filter>
-</div>
- """
+#-------------------------------------------------------------------------------------------------------------
+#   Filter of the showtimes by date 
+#   <div class="column is-12">
+#   date-filter :is-loading="isLoading" @change="dateChanged" first-function-date="2025-09-10"></date-filter>
+#   </div>
+#-------------------------------------------------------------------------------------------------------------
 def all_films(city):
     #city = input('City to search films in Cine Colombia: ')
     URL = f"https://www.cinecolombia.com/{city}/cartelera"
@@ -23,16 +23,18 @@ def all_films(city):
 
     soup = BeautifulSoup(response.text, "html.parser")
 
-
-    #GET ONLY THE CONTAINERS OF FILMS
+    #-------------------------------------------------------
+    # Get only the films on theaters 
+    #-------------------------------------------------------
     all_films = soup.select(".movie-item")
     films_map= {}
 
 
     for film in all_films:
-        #GET ORIGINAL NAME OF FILM
         name = film.select_one('.movie-item__title').get_text(strip=True)
-        #fix name so that can the function time can be searched by name
+    #---------------------------------------------------------------------
+    #   fix name so that can the function time can be searched by name
+    #---------------------------------------------------------------------
         url_name = re.sub(r'[:\s-]+', '-', name)
         films_map[name] = url_name
 
@@ -44,10 +46,10 @@ def search_film(films_map,film,city):
     url_name = films_map[film].url_name
     search_time_functions = f'https://www.cinecolombia.com/{city}/peliculas/{url_name}'
 
-    """
-    since the show times and locations load with a js file, 
-    it has to wait to the content to load so i had to use selenium 
-    """
+    #---------------------------------------------------------------------
+    #    since the show times and locations load with a js file, 
+    #   it has to wait to the content to load so i had to use selenium 
+    #---------------------------------------------------------------------
 
     firefox_options= Options()
     firefox_options.add_argument("--headless")
