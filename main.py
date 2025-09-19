@@ -1,11 +1,13 @@
+import hashlib, hmac, logging, os, json
+
 from fastapi import FastAPI,HTTPException,Request
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
-import os, logging, json
-
-
+from security.security import *
 from api import * 
+from whatsapp import *
+
 
 load_dotenv()
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
@@ -51,11 +53,10 @@ def get_showtimes(film_name : str , city : str):
 
     return film 
 
-#---------------------------------
-#  setup whebhook 
-#---------------------------------
+#-----------------------------------------------------
 #  Webhook verification (GET)
-# --------------------------------
+# ----------------------------------------------------
+
 @app.get("/webhook")
 async def verify(request: Request):
     mode = request.query_params.get("hub.mode")
@@ -65,7 +66,7 @@ async def verify(request: Request):
     if mode and token:
         if mode == "subscribe" and token == VERIFY_TOKEN:
             logging.info("WEBHOOK_VERIFIED")
-            return JSONResponse(content=challenge, status_code=200)
+            return int(challenge)#JSONResponse(content=challenge, status_code=200)
         else:
             logging.info("VERIFICATION_FAILED")
             raise HTTPException(status_code=403, detail="Verification failed")
@@ -74,26 +75,36 @@ async def verify(request: Request):
         raise HTTPException(status_code=400, detail="Missing parameters")
 
 
-# -----------------------------------
+# ---------------------------------------------------
 #  Handle webhook messages (POST)
-# -----------------------------------
+# ---------------------------------------------------
+
 @app.post("/webhook")
 async def webhook_post(request: Request):
+    #---------------------------------------------------
+    # Catch signature header and validate it  
+    #---------------------------------------------------
+    signature_header = request.headers.get("X-Hub-Signature-256", "")
+    signature = signature_header[7:] if signature_header.startswith("sha256=") else ""
+    raw_body = await request.body()
+    payload_str = raw_body.decode("utf-8")
+
+    if not validate_signature(payload_str, signature):
+        logging.warning("Signature verification failed!")
+        raise HTTPException(status_code=403, detail="Invalid signature")
 
     try:
         body = await request.json()
-        #---------------------------------
-        # All of this to get the content 
-        #---------------------------------
-        message = body['entry'][0]['changes'][0]['value']['messages'][0]['text']
-        print(message)
+
+        value = body.get("entry", [{}])[0].get("changes", [{}])[0].get("value", {})
+        
+        if "messages" in value:
+            message = value["messages"][0]
+            sender = message['from']            
+            send_whatsapp_message(sender)
+
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON")
         return JSONResponse(
             {"status": "error", "message": "Invalid JSON provided"}, status_code=400
         )
-
-    if body.get("entry", [{}])[0].get("changes", [{}])[0].get("value", {}).get("statuses"):
-        logging.info("Received a WhatsApp status update.")
-        return {"status": "ok"}
-

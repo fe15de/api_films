@@ -21,7 +21,7 @@ APP_SECRET = os.getenv("APP_SECRET")
 # --------------------------------------------------------------
 
 
-def send_whatsapp_message():
+def send_whatsapp_message(sender):
     url = f"https://graph.facebook.com/{VERSION}/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": "Bearer " + ACCESS_TOKEN,
@@ -29,14 +29,42 @@ def send_whatsapp_message():
     }
     data = {
         "messaging_product": "whatsapp",
-        "to": RECIPIENT_WAID,
-        "type": "template",
-        "template": {"name": "hello_world", "language": {"code": "en_US"}},
+        "to": sender,
+        "type": "interactive",
+        "interactive": 
+        {
+            "type": "list",
+            "header": {
+            "type": "text",
+            "text": "Choose an option"
+            },
+            "body": 
+            {
+            "text": "Please select from the following:"
+            },
+            "action": 
+            {
+                "button": "View Options",
+                "sections": 
+                [
+                    {
+                        "title": "Main Options",
+                        "rows": 
+                        [
+                            {
+                                "id": "option1",
+                                "title": "Option A",
+                                "description": "Details for option A"
+                            },
+                            {
+                                "id": "option2",
+                                "title": "Option B",
+                                "description": "Details for option B"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
     }
-    response = requests.post(url, headers=headers, json=data)
-    return response
-
-
-response = send_whatsapp_message()
-print(response.status_code)
-print(response.json())
+    requests.post(url, headers=headers, json=data)
