@@ -16,7 +16,7 @@ import re
 #   </div>
 #-------------------------------------------------------------------------------------------------------------
 def all_films(city):
-    #city = input('City to search films in Cine Colombia: ')
+    
     URL = f"https://www.cinecolombia.com/{city}/cartelera"
     response = requests.get(URL)
 
@@ -36,17 +36,13 @@ def all_films(city):
     #   fix name so that can the function time can be searched by name
     #---------------------------------------------------------------------
         url_name = re.sub(r'[:\s-]+', '-', name)
-        
-        if len(name) > 24:
-            name = name[:24]
-
         films_map[name] = url_name
 
     return films_map
 
 
 def search_film(films_map,film,city):
-    #film_name = input('Name of the Film you want to know show times: ')
+
     url_name = films_map[film].url_name
     search_time_functions = f'https://www.cinecolombia.com/{city}/peliculas/{url_name}'
 

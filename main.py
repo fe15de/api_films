@@ -7,28 +7,27 @@ from fastapi.responses import JSONResponse
 from security.security import *
 from api import * 
 from whatsapp.whatsapp import *
+from model.film import Film
 
 
 load_dotenv()
+
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 RECIPIENT_WAID = os.getenv("RECIPIENT_WAID")
 PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID")
 VERSION = os.getenv("VERSION")
-
 APP_ID = os.getenv("APP_ID")
 APP_SECRET = os.getenv("APP_SECRET")
-
 VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")
 
 app = FastAPI()
 #--------------------------------------------------
+#                   STATES
 # 1. cities sended 
 # 2. films seneded 
 #--------------------------------------------------
 user_state = {}
-class Film(BaseModel):
-    url_name : str
-    showtimes : dict[str, str]
+
 
 films = {}
 @app.get('/')
@@ -70,7 +69,7 @@ async def verify(request: Request):
     if mode and token:
         if mode == "subscribe" and token == VERIFY_TOKEN:
             logging.info("WEBHOOK_VERIFIED")
-            return int(challenge)#JSONResponse(content=challenge, status_code=200)
+            return int(challenge)
         else:
             logging.info("VERIFICATION_FAILED")
             raise HTTPException(status_code=403, detail="Verification failed")
