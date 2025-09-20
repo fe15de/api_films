@@ -36,6 +36,10 @@ def all_films(city):
     #   fix name so that can the function time can be searched by name
     #---------------------------------------------------------------------
         url_name = re.sub(r'[:\s-]+', '-', name)
+        
+        if len(name) > 24:
+            name = name[:24]
+
         films_map[name] = url_name
 
     return films_map

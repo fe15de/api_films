@@ -1,27 +1,24 @@
 from dotenv import load_dotenv
 import os
-import requests
-
 
 # --------------------------------------------------------------
 # Load environment variables
 # --------------------------------------------------------------
+
 
 load_dotenv()
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 RECIPIENT_WAID = os.getenv("RECIPIENT_WAID")
 PHONE_NUMBER_ID = os.getenv("PHONE_NUMBER_ID")
 VERSION = os.getenv("VERSION")
-
 APP_ID = os.getenv("APP_ID")
 APP_SECRET = os.getenv("APP_SECRET")
 
-# --------------------------------------------------------------
-# Send a template WhatsApp message
-# --------------------------------------------------------------
 
-
-def send_whatsapp_message(sender):
+# --------------------------------------------------------------
+# List Template WhatsApp message
+# --------------------------------------------------------------
+def list_template():
     url = f"https://graph.facebook.com/{VERSION}/{PHONE_NUMBER_ID}/messages"
     headers = {
         "Authorization": "Bearer " + ACCESS_TOKEN,
@@ -29,42 +26,50 @@ def send_whatsapp_message(sender):
     }
     data = {
         "messaging_product": "whatsapp",
-        "to": sender,
+        "to": '',
         "type": "interactive",
         "interactive": 
         {
             "type": "list",
-            "header": {
-            "type": "text",
-            "text": "Choose an option"
-            },
             "body": 
             {
-            "text": "Please select from the following:"
+            "text": "Please select a city from the following:"
             },
             "action": 
             {
-                "button": "View Options",
+                "button": "Options",
                 "sections": 
                 [
                     {
-                        "title": "Main Options",
+                        "title": "Choose",
                         "rows": 
                         [
-                            {
-                                "id": "option1",
-                                "title": "Option A",
-                                "description": "Details for option A"
-                            },
-                            {
-                                "id": "option2",
-                                "title": "Option B",
-                                "description": "Details for option B"
-                            }
+                            
                         ]
                     }
                 ]
             }
         }
     }
-    requests.post(url, headers=headers, json=data)
+
+    return url, headers,data
+
+# --------------------------------------------------------------
+# Text Template WhatsApp message
+# --------------------------------------------------------------
+
+def text_template():
+    url = f"https://graph.facebook.com/{VERSION}/{PHONE_NUMBER_ID}/messages"
+    headers = {
+        "Authorization": "Bearer " + ACCESS_TOKEN,
+        "Content-Type": "application/json",
+    }
+    data = {
+        "messaging_product": "whatsapp",
+        "to": '',
+        "text": {
+        "body": ""
+     }
+    }
+
+    return url, headers,data

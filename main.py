@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from fastapi.responses import JSONResponse
 from security.security import *
 from api import * 
-from whatsapp import *
+from whatsapp.whatsapp import *
 
 
 load_dotenv()
@@ -21,7 +21,11 @@ APP_SECRET = os.getenv("APP_SECRET")
 VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")
 
 app = FastAPI()
-
+#--------------------------------------------------
+# 1. cities sended 
+# 2. films seneded 
+#--------------------------------------------------
+user_state = {}
 class Film(BaseModel):
     url_name : str
     showtimes : dict[str, str]
@@ -29,7 +33,7 @@ class Film(BaseModel):
 films = {}
 @app.get('/')
 def home():
-    return ['pereira','bogota','cali']
+    return ['pereira','bogota','cali','medellin']
 
 @app.get('/films')
 def get_films(city : str):
@@ -100,12 +104,24 @@ async def webhook_post(request: Request):
         
         if "messages" in value:
             message = value["messages"][0]
-            sender = message['from']            
-            send_whatsapp_message(sender)
+            sender = message['from']
+            
+            if sender not in user_state:
+                send_whatsapp_message(sender)
+                user_state[sender] = [1,'']
+            else: 
+               
+                if user_state[sender][0] == 1:
+                    user_state[sender][1] = send_films_theaters(sender,message)
+                    user_state[sender][0] = 2
+                    
+                elif user_state[sender][0] == 2:
+                    send_showtimes(sender,message,user_state[sender][1])
+                    user_state.pop(sender)
 
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON")
         return JSONResponse(
             {"status": "error", "message": "Invalid JSON provided"}, status_code=400
         )
-    #TODO 
+    
