@@ -1,11 +1,11 @@
 theaters_by_city = {
     "Armenia": {"cinemark", "cine_col", "royal_films"},
-    "Barranquilla": {"cine_col", "royal_films"},
-    "Bogotá": {"cinemark", "cine_col", "royal_films"},
+    "Barranquilla": {"cine_col", "royal_films", "cinepolis"},
+    "Bogotá": {"cinemark", "cine_col", "royal_films", "cinepolis"},
     "Bucaramanga": {"cinemark", "cine_col", "royal_films"},
     "Buenaventura": {"royal_films"},
     "Buga": {"royal_films"},
-    "Cali": {"cinemark", "cine_col", "royal_films"},
+    "Cali": {"cinemark", "cine_col", "royal_films", "cinepolis"},
     "Cartagena": {"cine_col", "royal_films"},
     "Cartago": {"royal_films"},
     "Caucasia": {"royal_films"},
@@ -19,7 +19,7 @@ theaters_by_city = {
     "Ipiales": {"cinemark"},
     "Itagüí": {"royal_films"},
     "Madrid": {"royal_films"},
-    "Manizales": {"cine_col"},
+    "Manizales": {"cine_col", "cinepolis"},
     "Medellín": {"cinemark", "cine_col", "royal_films"},
     "Montería": {"cinemark", "cine_col", "royal_films"},
     "Mosquera": {"royal_films"},
@@ -34,8 +34,17 @@ theaters_by_city = {
     "Soledad": {"cinemark"},
     "Tuluá": {"royal_films"},
     "Tunja": {"royal_films"},
-    "Valledupar": {"royal_films"},
+    "Valledupar": {"royal_films", "cinepolis"},
     "Villavicencio": {"cinemark", "cine_col", "royal_films"},
     "Yopal": {"cinemark"},
     "Yumbo": {"royal_films"},
+    "Chía": {"cinepolis"},
+    "Envigado": {"cinepolis"},
+}
+
+theaters_url = {
+    'cinemark' : ['https://www.cinemark.com.co/cartelera/{city}','https://www.cinemark.com.co/cartelera/{city}/{url_name}'],
+    'cine_col' : ['https://www.cinecolombia.com/{city}/cartelera','https://www.cinecolombia.com/{city}/peliculas/{url_name}'],
+    'cinepolis' : ['https://cinepolis.com.co/cartelera/{city}-colombia/',''], # -> In Theates link gives the showtimes
+    'royal_films' : ['https://cinemasroyalfilms.com/cartelera/{city}', ''], # -> In Theates link gives the link to the showtimes
 }

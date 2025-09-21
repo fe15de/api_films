@@ -2,13 +2,14 @@ import requests
 from whatsapp.template import *
 from api import all_films, search_film
 from model.film import Film
+from dict_theaters import theaters_by_city
 
 
 # --------------------------------------------------------------
 # GLOBALS
 # --------------------------------------------------------------
 
-cities = ['pereira','bogota','cali','medellin']
+
 films_by_city = {}
 
 
@@ -21,16 +22,23 @@ def send_whatsapp_message(sender):
     data['to'] = sender
     data['interactive']['body']['text'] = 'Please select a city from the following:'
     send_cities = data['interactive']['action']['sections'][0]['rows']
+    cities = theaters_by_city.keys()
 
-    for id,city in enumerate(cities):
+    for id,city in enumerate(cities,start=1):
         send_cities.append({
                             "id": id,
                             "title": city,
                             })
+        if id % 10 == 0:
+                requests.post(url, headers=headers, json=data)
+                send_cities.clear()
+        
+    if send_cities:
+        requests.post(url, headers=headers, json=data)
                             
 
 
-    print(requests.post(url, headers=headers, json=data).text)
+    #print(requests.post(url, headers=headers, json=data).text)
 
 
 #----------------------------------------------------------------------
@@ -44,8 +52,12 @@ def send_films_theaters(sender,message):
         data['to'] = sender
         data['interactive']['body']['text'] = 'Please select a film from the following:'
         city = message['interactive']['list_reply']['title']
-        films = films_by_city[city] = all_films(city)
         
+        if not films_by_city[city]:
+            films = films_by_city[city] = all_films(city)
+        else:
+            films = films_by_city[city]
+
         send_films = data['interactive']['action']['sections'][0]['rows'] 
         print(films)
         for id,film in enumerate(films,start=1):
@@ -79,10 +91,12 @@ def send_showtimes(sender,message_sender,city):
         data['to'] = sender
         message = data['text']['body']
         film = message_sender['interactive']['list_reply']['description']
-        
-        theaters_times =  search_film(films_by_city[city],film,city)
         film = films_by_city[city][film]
-        film.showtimes = theaters_times
+        
+        if not film.showtimes:
+            theaters_times =  search_film(films_by_city[city],film,city)
+            film.showtimes = theaters_times
+        
         locations = film.showtimes
         message = '*SHOWTIMES :*\n'
         

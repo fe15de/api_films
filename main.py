@@ -22,9 +22,9 @@ VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")
 
 app = FastAPI()
 #--------------------------------------------------
-#                   STATES
+#                   USER STATES
 # 1. cities sended 
-# 2. films seneded 
+# 2. films sended 
 #--------------------------------------------------
 user_state = {}
 
