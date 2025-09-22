@@ -5,7 +5,7 @@ from model.film import Film
 from dict_theaters import theaters_by_city
 
 # --------------------------------------------------------------
-# Send Cities 
+#                       Send Cities 
 # --------------------------------------------------------------
 films_by_city = {}
 
@@ -34,7 +34,7 @@ def send_whatsapp_message(sender):
 
 
 #----------------------------------------------------------------------
-# Send Films of the city that was chosen
+#               Send Films of the city that was chosen
 #----------------------------------------------------------------------
 def send_films_theaters(sender,message):
 
@@ -46,7 +46,7 @@ def send_films_theaters(sender,message):
         city = message['interactive']['list_reply']['title']
         
         #---------------------------------------------------------------------
-        #    The goal is to search films once per week 
+        #           The goal is to search films once per week 
         #---------------------------------------------------------------------
 
         if not films_by_city[city]:
@@ -79,7 +79,7 @@ def send_films_theaters(sender,message):
     
 
 #----------------------------------------------------------------------
-# Send showtimes of Films in the city that was chosen
+#          Send showtimes of Films in the city that was chosen
 #----------------------------------------------------------------------
 def send_showtimes(sender,message_sender,city):
     try:
@@ -91,7 +91,7 @@ def send_showtimes(sender,message_sender,city):
 
         
         #---------------------------------------------------------------------
-        #  The goal is to search films showtimes at 00:00 once per day
+        #     The goal is to search films showtimes at 00:00 once per day
         #---------------------------------------------------------------------
         
         if not film.showtimes:

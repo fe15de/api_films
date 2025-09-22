@@ -21,7 +21,7 @@ class Cinemark(Theater):
         driver.get(url)
 
         #-------------------------------------------------------
-        # Wait javascript to load
+        #               Wait javascript to load
         #-------------------------------------------------------
 
         WebDriverWait(driver,1).until(EC.presence_of_element_located((By.CLASS_NAME,'billboard-movies')))

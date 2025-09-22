@@ -21,11 +21,11 @@ APP_SECRET = os.getenv("APP_SECRET")
 VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")
 
 app = FastAPI()
-#--------------------------------------------------
+#---------------------------------------------------------
 #                   USER STATES
 # 1. cities sended 
 # 2. films sended 
-#--------------------------------------------------
+#---------------------------------------------------------
 user_state = {}
 
 
@@ -57,7 +57,7 @@ def get_showtimes(film_name : str , city : str):
     return film 
 
 #-----------------------------------------------------
-#  Webhook verification (GET)
+#             Webhook verification (GET)
 # ----------------------------------------------------
 
 @app.get("/webhook")
@@ -79,14 +79,14 @@ async def verify(request: Request):
 
 
 # ---------------------------------------------------
-#  Handle webhook messages (POST)
+#          Handle webhook messages (POST)
 # ---------------------------------------------------
 
 @app.post("/webhook")
 async def webhook_post(request: Request):
-    #---------------------------------------------------
-    # Catch signature header and validate it  
-    #---------------------------------------------------
+    #-----------------------------------------------------
+    #       Catch signature header and validate it  
+    #-----------------------------------------------------
     signature_header = request.headers.get("X-Hub-Signature-256", "")
     signature = signature_header[7:] if signature_header.startswith("sha256=") else ""
     raw_body = await request.body()

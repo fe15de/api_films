@@ -16,13 +16,7 @@ class CineCol(Theater):
     def get_films(self, city):
         url = theaters_url[self.name][0].format(city=city)
         response = requests.get(url)
-
         soup = BeautifulSoup(response.text, "html.parser")
-
-        #-------------------------------------------------------
-        # Get only the films on theaters 
-        #-------------------------------------------------------
-
         all_films = soup.select(".movie-item")
 
 
@@ -30,19 +24,15 @@ class CineCol(Theater):
             us_name = film.select_one('.movie-item__title').get_text(strip=True)
             name = film.select_one('.movie-item__meta').get_text(strip=True)
 
-            #---------------------------------------------------------------------
-            #   Fix name so that can be added to the url 
-            #---------------------------------------------------------------------
+            #---------------------------------------------------------------------------
+            #   fixing name so that can the function time can be searched by name
+            #--------------------------------------------------------------------------
             
             name = re.sub(r"Título en español:\s*(.+)",r'\1', name)
             name = unicodedata.normalize("NFD", name)
             name = "".join(ch for ch in name if unicodedata.category(ch) != "Mn")
             us_name = us_name.replace("‘", "").replace("’", "").replace("“", '').replace("”", '')
             
-            #---------------------------------------------------------------------
-            #   fix name so that can the function time can be searched by name
-            #---------------------------------------------------------------------
-
             url_name = re.sub(r'[:\s-]+', '-', us_name)
             self.films[name] = url_name
     
@@ -58,7 +48,7 @@ class CineCol(Theater):
         return url_name
 
         #---------------------------------------------------------------------
-        #    since the show times and locations load with js file, 
+        #       since the show times and locations load with js file, 
         #   it has to wait to the content to load so i had to use selenium 
         #---------------------------------------------------------------------
 
@@ -90,8 +80,9 @@ class CineCol(Theater):
 
 
 #-------------------------------------------------------------------------------------------------------------
-#   Filter of the showtimes 
+#                                     Filter of the showtimes 
 #   <div class="column is-12">
 #   date-filter :is-loading="isLoading" @change="dateChanged" first-function-date="2025-09-10"></date-filter>
 #   </div>
+#
 #-------------------------------------------------------------------------------------------------------------
