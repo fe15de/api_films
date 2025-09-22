@@ -4,18 +4,10 @@ from api import all_films, search_film
 from model.film import Film
 from dict_theaters import theaters_by_city
 
-
 # --------------------------------------------------------------
-# GLOBALS
+# Send Cities 
 # --------------------------------------------------------------
-
-
 films_by_city = {}
-
-
-# --------------------------------------------------------------
-# Send a template WhatsApp message
-# --------------------------------------------------------------
 
 def send_whatsapp_message(sender):
     url, headers,data = list_template()
@@ -42,7 +34,7 @@ def send_whatsapp_message(sender):
 
 
 #----------------------------------------------------------------------
-# Send Films in the city that was chosen
+# Send Films of the city that was chosen
 #----------------------------------------------------------------------
 def send_films_theaters(sender,message):
 
@@ -53,6 +45,10 @@ def send_films_theaters(sender,message):
         data['interactive']['body']['text'] = 'Please select a film from the following:'
         city = message['interactive']['list_reply']['title']
         
+        #---------------------------------------------------------------------
+        #    The goal is to search films once per week 
+        #---------------------------------------------------------------------
+
         if not films_by_city[city]:
             films = films_by_city[city] = all_films(city)
         else:
@@ -92,6 +88,11 @@ def send_showtimes(sender,message_sender,city):
         message = data['text']['body']
         film = message_sender['interactive']['list_reply']['description']
         film = films_by_city[city][film]
+
+        
+        #---------------------------------------------------------------------
+        #  The goal is to search films showtimes at 00:00 once per day
+        #---------------------------------------------------------------------
         
         if not film.showtimes:
             theaters_times =  search_film(films_by_city[city],film,city)

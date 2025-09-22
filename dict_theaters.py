@@ -45,6 +45,6 @@ theaters_by_city = {
 theaters_url = {
     'cinemark' : ['https://www.cinemark.com.co/cartelera/{city}','https://www.cinemark.com.co/cartelera/{city}/{url_name}'],
     'cine_col' : ['https://www.cinecolombia.com/{city}/cartelera','https://www.cinecolombia.com/{city}/peliculas/{url_name}'],
-    'cinepolis' : ['https://cinepolis.com.co/cartelera/{city}-colombia/',''], # -> In Theates link gives the showtimes
-    'royal_films' : ['https://cinemasroyalfilms.com/cartelera/{city}', ''], # -> In Theates link gives the link to the showtimes
+    'cinepolis' : ['https://cinepolis.com.co/cartelera/{city}-colombia/',''], # -> In Theaters link gives the showtimes
+    'royal_films' : ['https://cinemasroyalfilms.com/cartelera/{city}', ''], # -> In Theaters link gives the link to the showtimes
 }
