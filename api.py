@@ -15,8 +15,16 @@ cinemark.get_films('bogota') """
 cine_col = CineCol()
 cine_col.get_films('bogota')
 
-z = cine_col.search_showtimes_film('Un Poeta','bogota')
-print(z)
+cinemark = Cinemark()
+cinemark.get_films('bogota')
+
+films = {**cine_col.films,**cinemark.films}
+films = group_similar_films(films)
+
+x = cinemark.search_showtimes_film(films,'Demon Slayer: Kimetsu no Yaiba - Castillo infinito','bogota')
+print(x)
+cine_col.search_showtimes_film(films,'Demon Slayer: Kimetsu no Yaiba - Castillo infinito','bogota')
+
 """ cinemark = films_cinemark('bogota')
 cine_col = films_cine_col('bogota')
 

@@ -44,7 +44,6 @@ def send_films_theaters(sender,message):
         data['to'] = sender
         data['interactive']['body']['text'] = 'Please select a film from the following:'
         city = message['interactive']['list_reply']['title']
-        
         #---------------------------------------------------------------------
         #           The goal is to search films once per week 
         #---------------------------------------------------------------------
@@ -88,8 +87,6 @@ def send_showtimes(sender,message_sender,city):
         message = data['text']['body']
         film = message_sender['interactive']['list_reply']['description']
         film = films_by_city[city][film]
-
-        
         #---------------------------------------------------------------------
         #     The goal is to search films showtimes at 00:00 once per day
         #---------------------------------------------------------------------
@@ -106,7 +103,6 @@ def send_showtimes(sender,message_sender,city):
             message += f'Times: {locations[location]}\n'
             
         data['text']['body'] = message
-            
         requests.post(url, headers=headers, json=data)
 
     except Exception as ex:

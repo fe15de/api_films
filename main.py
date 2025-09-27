@@ -27,12 +27,13 @@ app = FastAPI()
 # 2. films sended 
 #---------------------------------------------------------
 user_state = {}
-
-
 films = {}
+
+
 @app.get('/')
 def home():
     return ['pereira','bogota','cali','medellin']
+
 
 @app.get('/films')
 def get_films(city : str):
@@ -59,7 +60,6 @@ def get_showtimes(film_name : str , city : str):
 #-----------------------------------------------------
 #             Webhook verification (GET)
 # ----------------------------------------------------
-
 @app.get("/webhook")
 async def verify(request: Request):
     mode = request.query_params.get("hub.mode")
@@ -81,7 +81,6 @@ async def verify(request: Request):
 # ---------------------------------------------------
 #          Handle webhook messages (POST)
 # ---------------------------------------------------
-
 @app.post("/webhook")
 async def webhook_post(request: Request):
     #-----------------------------------------------------
@@ -98,7 +97,6 @@ async def webhook_post(request: Request):
 
     try:
         body = await request.json()
-
         value = body.get("entry", [{}])[0].get("changes", [{}])[0].get("value", {})
         
         if "messages" in value:
@@ -109,11 +107,10 @@ async def webhook_post(request: Request):
                 send_whatsapp_message(sender)
                 user_state[sender] = [1,'']
             else: 
-               
                 if user_state[sender][0] == 1:
                     user_state[sender][1] = send_films_theaters(sender,message)
                     user_state[sender][0] = 2
-                    
+
                 elif user_state[sender][0] == 2:
                     send_showtimes(sender,message,user_state[sender][1])
                     user_state.pop(sender)

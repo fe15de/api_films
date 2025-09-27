@@ -1,3 +1,5 @@
+from selenium.webdriver.firefox.options import Options
+from selenium import webdriver
 from abc import ABC, abstractmethod
 
 class Theater(ABC):
@@ -9,7 +11,6 @@ class Theater(ABC):
     #-------------------------------------------------------
     #          Get only the films on theaters 
     #-------------------------------------------------------
-
     @abstractmethod
     def get_films(self, city):
         pass
@@ -17,7 +18,6 @@ class Theater(ABC):
     #-------------------------------------------------------
     #           Get locations and showtimes 
     #-------------------------------------------------------
-
     @abstractmethod
     def search_showtimes_film(self, films,film, city):
         pass
@@ -31,3 +31,11 @@ class Theater(ABC):
                 return url_name
             
         return False
+    
+    def get_driver(self,url):
+        firefox_options= Options()
+        firefox_options.add_argument("--headless")
+        driver = webdriver.Firefox(options=firefox_options)
+        driver.get(url)
+
+        return driver
